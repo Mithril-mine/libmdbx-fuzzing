@@ -19,7 +19,23 @@ typedef struct      dbi_mode_desc
 
 extern const dbi_mode_desc_t g_modes[];
 
+typedef struct      fuzz_ctx
+{
+    MDBX_env        *env;
+    MDBX_txn        *txn;
+    MDBX_dbi        dbi;
+    MDBX_cursor     *cursor;
+} fuzz_ctx_t;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void logger(MDBX_log_level_t level, const char *function, int line,
         const char *fmt, va_list args);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

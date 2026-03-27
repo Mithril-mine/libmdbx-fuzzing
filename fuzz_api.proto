@@ -1,0 +1,42 @@
+/* SPDX-License-Identifier: Apache-2.0
+ * Copyright (c) 2026 Chloe Cano
+ *
+ * OSS-Fuzz harness for libmdbx <https://libmdbx.dqdkfa.ru>
+ * libmdbx is Copyright (c) its respective authors, Apache 2.0.
+ */
+
+syntax = "proto3";
+package fuzz_api;
+
+message OpPut       { bytes key = 1; bytes val = 2; }
+message OpGet       { bytes key = 1; }
+message OpDel       { bytes key = 1; }
+message OpCursorSet { bytes key = 1; }
+message OpCursorPut { bytes key = 1; bytes val = 2; }
+message BareOp      {}
+
+message Op
+{
+  oneof op
+  {
+    OpPut       put                = 1;
+    OpGet       get                = 2;
+    OpDel       del                = 3;
+    BareOp      cursor_first       = 4;
+    BareOp      cursor_next        = 5;
+    BareOp      cursor_prev        = 6;
+    BareOp      cursor_last        = 7;
+    OpCursorSet cursor_set         = 8;
+    BareOp      txn_commit         = 9;
+    BareOp      txn_abort          = 10;
+    OpCursorPut cursor_put         = 11;
+    BareOp      cursor_del         = 12;
+    BareOp      cursor_del_alldups = 13;
+  }
+}
+
+message FuzzSession
+{
+  uint32          mode = 1;
+  repeated Op     ops  = 2;
+}

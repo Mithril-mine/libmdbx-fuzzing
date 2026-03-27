@@ -1,3 +1,6 @@
 [submodule "libmdbx"]
 	path = libmdbx
 	url = https://git@git.sourcecraft.dev/dqdkfa/libmdbx.git
+[submodule "libprotobuf-mutator"]
+	path = libprotobuf-mutator
+	url = https://github.com/google/libprotobuf-mutator.git
