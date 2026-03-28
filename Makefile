@@ -46,7 +46,7 @@ PROTO_LIBS  := -Wl,--start-group \
                  $(wildcard $(LPM_PROTO)/lib/libabsl_*.a) \
                -Wl,--end-group
 
-all: fuzz_raw_db_format db_seed_gen fuzz_api
+all: fuzz_raw_db_format db_seed_gen fuzz_api api_seed_gen
 
 $(LIBMDBX_NORMAL):
 	@mkdir -p $(dir $@)
@@ -100,6 +100,9 @@ fuzz_api: $(LIBMDBX_FUZZ) $(FUZZ_API_OBJS) $(PROTO_OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $(FUZZ_API_OBJS) $(PROTO_OBJ) \
 		$(LPM_LIBS) $(PROTO_LIBS) $(LIBMDBX_FUZZ)
 
+api_seed_gen: $(LIBMDBX_NORMAL) $(API_GEN_OBJS)
+	$(CC) $(CFLAGS) -o $@ $(API_GEN_OBJS) $(LIBMDBX_NORMAL)
+
 obj/fuzz/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
@@ -114,7 +117,7 @@ obj/dbgen/%.o: %.c
 
 clean:
 	rm -rf obj/fuzz obj/dbgen obj/proto obj/libmdbx.*.a \
-		fuzz_raw_db_format db_seed_gen fuzz_api 
+		fuzz_raw_db_format db_seed_gen fuzz_api api_seed_gen
 
 distclean: clean
 	rm -rf obj
