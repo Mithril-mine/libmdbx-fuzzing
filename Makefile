@@ -16,12 +16,12 @@ LIBMDBX        := ./libmdbx
 LIBMDBX_NORMAL := obj/libmdbx.normal.a
 LIBMDBX_FUZZ   := obj/libmdbx.fuzz.a
 
-CC          := clang
-CXX         := clang++
-CFLAGS      := -Wall -Wextra
-CXXFLAGS    := -Wall -Wextra
+CFLAGS      += -Wall -Wextra
+CXXFLAGS    += -Wall -Wextra
 LIBFUZZER   := -fno-omit-frame-pointer -ggdb
 ifdef LOCAL
+CC          := clang
+CXX         := clang++
 LIBFUZZER   += -fsanitize=fuzzer,address
 endif
 INCLUDE     := -I. -I$(LIBMDBX)
