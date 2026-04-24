@@ -18,11 +18,11 @@ LIBMDBX_FUZZ   := obj/libmdbx.fuzz.a
 
 CFLAGS      += -Wall -Wextra
 CXXFLAGS    += -Wall -Wextra
-LIBFUZZER   := -fno-omit-frame-pointer -ggdb
+LIBFUZZER   := -fno-omit-frame-pointer
 ifdef LOCAL
 CC          := clang
 CXX         := clang++
-LIBFUZZER   += -fsanitize=fuzzer,address
+LIBFUZZER   += -fsanitize=fuzzer,address -ggdb
 endif
 INCLUDE     := -I. -I$(LIBMDBX)
 
