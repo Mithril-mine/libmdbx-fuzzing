@@ -20,7 +20,10 @@ CC          := clang
 CXX         := clang++
 CFLAGS      := -Wall -Wextra
 CXXFLAGS    := -Wall -Wextra
-LIBFUZZER   := -fsanitize=fuzzer,address -fno-omit-frame-pointer -ggdb
+LIBFUZZER   := -fno-omit-frame-pointer -ggdb
+ifdef LOCAL
+LIBFUZZER   += -fsanitize=fuzzer,address
+endif
 INCLUDE     := -I. -I$(LIBMDBX)
 
 LPM_SRC      := libprotobuf-mutator
@@ -78,7 +81,8 @@ $(LPM_FUZZER_A):
 fuzz_raw_db_format: CFLAGS   += $(LIBFUZZER)
 fuzz_raw_db_format: CXXFLAGS += $(LIBFUZZER)
 fuzz_raw_db_format: $(LIBMDBX_FUZZ) $(FUZZ_DB_OBJS)
-	$(CC) $(CFLAGS) -o $@ $(FUZZ_DB_OBJS) $(LIBMDBX_FUZZ)
+	$(CC) $(CFLAGS) -o $@ $(FUZZ_DB_OBJS) $(LIBMDBX_FUZZ) \
+		$(LIB_FUZZING_ENGINE)
 
 db_seed_gen: $(LIBMDBX_NORMAL) $(DB_GEN_OBJS)
 	$(CC) $(CFLAGS) -o $@ $(DB_GEN_OBJS) $(LIBMDBX_NORMAL)
@@ -98,7 +102,8 @@ fuzz_api: CXXFLAGS += $(LIBFUZZER)
 fuzz_api: INCLUDE  += -I$(PROTO_OUT) $(LPM_INCLUDE) $(PROTO_INC)
 fuzz_api: $(LIBMDBX_FUZZ) $(FUZZ_API_OBJS) $(PROTO_OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $(FUZZ_API_OBJS) $(PROTO_OBJ) \
-		$(LPM_LIBS) $(PROTO_LIBS) $(LIBMDBX_FUZZ)
+		$(LPM_LIBS) $(PROTO_LIBS) $(LIBMDBX_FUZZ) \
+		$(LIB_FUZZING_ENGINE)
 
 api_seed_gen: $(LIBMDBX_NORMAL) $(API_GEN_OBJS)
 	$(CC) $(CFLAGS) -o $@ $(API_GEN_OBJS) $(LIBMDBX_NORMAL)
